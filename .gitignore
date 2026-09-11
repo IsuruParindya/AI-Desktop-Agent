@@ -1,0 +1,39 @@
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+
+# Environment / secrets
+.env
+.env.*
+!.env.example
+
+# Logs / runtime data
+logs/
+sessions/
+cron/
+*.log
+
+# Hermes' own Git repository
+hermes/hermes-agent/
+
+# Python cache
+.pytest_cache/
+.mypy_cache/
+
+# OS files
+.DS_Store
+Thumbs.db
+# Hermes upstream repository
+hermes/hermes-agent/
+
+# Hermes runtime state
+hermes/auth.lock
+hermes/*.db
+hermes/*.db-*
+hermes/logs/
+hermes/sessions/
+hermes/cron/
+
+# Hermes generated caches
+hermes/*cache*

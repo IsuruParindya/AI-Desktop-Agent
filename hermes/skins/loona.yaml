@@ -1,0 +1,57 @@
+name: loona
+description: Loona — deep blue and seafoam personal AI companion
+
+colors:
+  banner_border: "#2A6FB9"
+  banner_title: "#A9DFFF"
+  banner_accent: "#5DB8F5"
+  banner_dim: "#44638F"
+  banner_text: "#EAF7FF"
+  ui_accent: "#5DB8F5"
+  ui_label: "#A9DFFF"
+  ui_ok: "#4caf50"
+  ui_error: "#ef5350"
+  ui_warn: "#ffa726"
+  prompt: "#EAF7FF"
+  input_rule: "#2A6FB9"
+  response_border: "#5DB8F5"
+  status_bar_bg: "#0F2440"
+  status_bar_text: "#EAF7FF"
+  status_bar_strong: "#A9DFFF"
+  status_bar_dim: "#52708A"
+  status_bar_good: "#6ED7B0"
+  status_bar_warn: "#5DB8F5"
+  status_bar_bad: "#3576BC"
+  status_bar_critical: "#D94F4F"
+  session_label: "#A9DFFF"
+  session_border: "#496884"
+  completion_menu_bg: "#0F2440"
+  completion_menu_current_bg: "#254D73"
+  selection_bg: "#2A587F"
+  shell_dollar: "#5DB8F5"
+  voice_status_bg: "#0F2440"
+
+spinner:
+  waiting_faces: ["(◌)", "(◠)", "(≈)", "(∿)", "(⌁)"]
+  thinking_faces: ["(◌)", "(≈)", "(∿)", "(⌁)", "(◠)"]
+  thinking_verbs:
+    - "thinking"
+    - "figuring things out"
+    - "checking the details"
+    - "working on it"
+    - "putting things together"
+    - "connecting the dots"
+  wings:
+    - ["⟨≈", "≈⟩"]
+    - ["⟨◌", "◌⟩"]
+    - ["⟨∿", "∿⟩"]
+
+branding:
+  agent_name: "Loona"
+  welcome: "Hello, Sir."
+  goodbye: "See you later, Sir."
+  response_label: " Loona "
+  prompt_symbol: "❯"
+  help_header: "(◌)? Loona Commands"
+
+tool_prefix: "│"
