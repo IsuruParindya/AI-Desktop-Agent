@@ -1,0 +1,13 @@
++ �� Loona Tools
+  ✓ Saved ��️  CLI configuration
+
+
+  Select an option:
+  Select by number, Enter to confirm.
+
+  (●)  1. Configure ��️  CLI  (19/29 enabled)
+  (○)  2. Reconfigure an existing tool's provider or API key
+  (○)  3. Configure shared metrics  (off)
+  (○)  4. Done
+
+  Choice [default 1]: 

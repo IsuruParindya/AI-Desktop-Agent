@@ -1,3 +1,15 @@
 name: loona-tools
 version: 1.0.0
-description: Custom tools for Loona, the user's AI desktop companion.
+description: "Custom tools for Loona, the user's AI desktop companion."
+author: Isuru
+kind: backend
+
+provides_tools:
+  - get_datetime
+  - get_system_info
+  - loona_search_files
+  - loona_open_file
+  - loona_open_file_by_query
+  - loona_search_applications
+  - loona_open_application
+  - loona_close_application
