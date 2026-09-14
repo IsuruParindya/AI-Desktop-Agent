@@ -1,7 +1,65 @@
 import json
 import os
 
-from .common import build_file_index, score_file
+from .index import build_file_index
+from .matching import (
+    _get_keywords,
+    _normalize_text,
+    score_file,
+)
+
+
+def _get_candidate_files(query, file_index):
+    """
+    Quickly narrow the full file index down to likely candidates.
+
+    This prevents score_file() from running against every file
+    on D: and E: for every search.
+    """
+
+    normalized_query = _normalize_text(query)
+
+    if not normalized_query:
+        return []
+
+    query_keywords = _get_keywords(normalized_query)
+
+    # First try files whose normalized filename contains
+    # the complete query.
+    direct_matches = []
+
+    for file_info in file_index:
+
+        filename = file_info["stem_lower"]
+
+        if normalized_query in filename:
+            direct_matches.append(file_info)
+
+    if direct_matches:
+        return direct_matches
+
+    # Otherwise, look for files containing at least one
+    # meaningful query keyword.
+    keyword_matches = []
+
+    for file_info in file_index:
+
+        filename = file_info["stem_lower"]
+
+        if any(
+            keyword in filename
+            for keyword in query_keywords
+        ):
+            keyword_matches.append(file_info)
+
+    # If nothing matched directly, return the full index.
+    #
+    # This preserves fuzzy matching for cases such as:
+    # "Avngers" → "Avengers"
+    if not keyword_matches:
+        return file_index
+
+    return keyword_matches
 
 
 def loona_search_files(args: dict, **kwargs) -> str:
@@ -24,6 +82,7 @@ def loona_search_files(args: dict, **kwargs) -> str:
         })
 
     try:
+
         max_results = int(
             args.get("max_results", 10)
         )
@@ -39,9 +98,22 @@ def loona_search_files(args: dict, **kwargs) -> str:
 
     file_index = build_file_index()
 
+    # ---------------------------------------------------------
+    # Fast candidate filtering
+    # ---------------------------------------------------------
+
+    candidates_to_score = _get_candidate_files(
+        query,
+        file_index,
+    )
+
     candidates = []
 
-    for file_info in file_index:
+    # ---------------------------------------------------------
+    # Detailed scoring
+    # ---------------------------------------------------------
+
+    for file_info in candidates_to_score:
 
         score = score_file(
             query,
@@ -58,12 +130,20 @@ def loona_search_files(args: dict, **kwargs) -> str:
             )
         )
 
+    # ---------------------------------------------------------
+    # Sort strongest matches first
+    # ---------------------------------------------------------
+
     candidates.sort(
         key=lambda item: (
             -item[0],
             item[1]["name_lower"],
         )
     )
+
+    # ---------------------------------------------------------
+    # Build final results
+    # ---------------------------------------------------------
 
     results = []
     seen_paths = set()

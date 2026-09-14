@@ -2,6 +2,8 @@
 .venv/
 __pycache__/
 *.py[cod]
+.pytest_cache/
+.mypy_cache/
 
 # Environment / secrets
 .env
@@ -14,16 +16,13 @@ sessions/
 cron/
 *.log
 
-# Hermes' own Git repository
-hermes/hermes-agent/
-
-# Python cache
-.pytest_cache/
-.mypy_cache/
+# Loona file-search cache
+hermes/plugins/loona-tools/tools/files/.file_index.json
 
 # OS files
 .DS_Store
 Thumbs.db
+
 # Hermes upstream repository
 hermes/hermes-agent/
 

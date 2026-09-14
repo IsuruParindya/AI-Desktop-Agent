@@ -29,10 +29,18 @@ GET_SYSTEM_INFO = {
 LOONA_SEARCH_FILES = {
     "name": "loona_search_files",
     "description": (
-        "Searches the user's LOCAL Windows PC for files on the D: and E: drives. "
-        "Use this when the user asks to find, locate, or search for a local file, "
-        "movie, video, document, song, image, or other file. "
-        "Do NOT use web search for local PC file requests. "
+        "PRIMARY TOOL FOR LOCAL COMPUTER FILE REQUESTS. "
+        "Use this tool FIRST whenever the user asks to find, locate, search for, "
+        "look for, or identify a file that may be stored on their Windows PC. "
+        "This includes PDFs, theses, documents, Word files, Excel files, movies, "
+        "videos, songs, images, applications, and other local files. "
+        "Searches the user's LOCAL Windows PC on the D: and E: drives. "
+        "Examples: 'find my thesis', 'find this PDF', 'find my bird recognition thesis', "
+        "'find Avengers', 'locate my project', 'find that image'. "
+        "These requests mean SEARCH THE USER'S COMPUTER, not the internet. "
+        "DO NOT use web search for these requests. "
+        "Only use web search when the user explicitly asks to search the internet, "
+        "online, websites, academic databases, or other remote sources. "
         "Supports partial names and small spelling mistakes."
     ),
     "parameters": {
@@ -104,9 +112,17 @@ LOONA_OPEN_APPLICATION = {
 LOONA_CLOSE_APPLICATION = {
     "name": "loona_close_application",
     "description": (
-        "Closes a running Windows application by its executable process name. "
-        "Use this when the user asks to close an application. "
-        "Do not use force termination."
+        "Closes a running Windows application gracefully. "
+        "Use this tool whenever the user asks to close an application. "
+        "If a specific window or media item is mentioned, use the "
+        "window_title parameter to target only that instance. "
+        "Attempt a normal graceful close and verify that the targeted "
+        "application instance exited. "
+        "NEVER use terminal, PowerShell, CMD, taskkill, or another "
+        "shell command to close the application. "
+        "NEVER force terminate an application. "
+        "If the targeted application cannot be closed gracefully, "
+        "report the failure to the user instead of using another method."
     ),
     "parameters": {
         "type": "object",
@@ -114,8 +130,19 @@ LOONA_CLOSE_APPLICATION = {
             "process_name": {
                 "type": "string",
                 "description": (
-                    "The executable process name of the application. "
-                    "Examples: chrome.exe, discord.exe, notepad.exe."
+                    "The executable process name of the application, "
+                    "such as PotPlayerMini64.exe, chrome.exe, "
+                    "or notepad.exe."
+                ),
+            },
+            "window_title": {
+                "type": "string",
+                "description": (
+                    "Optional specific window title or distinctive "
+                    "text from the window title to identify the exact "
+                    "application instance to close. Use this when the "
+                    "user refers to a specific movie, document, window, "
+                    "or application instance."
                 ),
             },
         },

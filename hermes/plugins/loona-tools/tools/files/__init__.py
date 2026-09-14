@@ -1,8 +1,6 @@
 from .search import loona_search_files
-from .open import (
-    loona_open_file,
-    loona_open_file_by_query,
-)
+from .open import loona_open_file
+from .open_by_query import loona_open_file_by_query
 
 
 __all__ = [
