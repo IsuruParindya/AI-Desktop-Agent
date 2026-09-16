@@ -13,6 +13,10 @@ from .applications import (
     loona_close_application,
 )
 
+from .system import (
+    loona_set_volume,
+)
+
 
 __all__ = [
     "get_datetime",
@@ -23,4 +27,5 @@ __all__ = [
     "loona_search_applications",
     "loona_open_application",
     "loona_close_application",
+    "loona_set_volume",
 ]

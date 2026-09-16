@@ -9,6 +9,7 @@ from .tools import (
     loona_search_applications,
     loona_open_application,
     loona_close_application,
+    loona_set_volume,
 )
 
 
@@ -67,4 +68,11 @@ def register(ctx):
         toolset="loona_tools",
         schema=schemas.LOONA_CLOSE_APPLICATION,
         handler=loona_close_application,
+    )
+
+    ctx.register_tool(
+        name="loona_set_volume",
+        toolset="loona_tools",
+        schema=schemas.LOONA_SET_VOLUME,
+        handler=loona_set_volume,
     )

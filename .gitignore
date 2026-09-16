@@ -1,38 +1,72 @@
+# ==============================
 # Python
+# ==============================
 .venv/
 __pycache__/
 *.py[cod]
 .pytest_cache/
 .mypy_cache/
 
-# Environment / secrets
+# ==============================
+# Node.js
+# ==============================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Hermes LSP environment
+hermes/lsp/
+
+# ==============================
+# Environment / Secrets
+# ==============================
 .env
 .env.*
 !.env.example
 
-# Logs / runtime data
+hermes/auth.json
+hermes/auth.lock
+
+# ==============================
+# Runtime / Temporary Data
+# ==============================
+*.log
 logs/
 sessions/
 cron/
-*.log
 
-# Loona file-search cache
-hermes/plugins/loona-tools/tools/files/.file_index.json
-
-# OS files
-.DS_Store
-Thumbs.db
-
-# Hermes upstream repository
-hermes/hermes-agent/
-
-# Hermes runtime state
-hermes/auth.lock
-hermes/*.db
-hermes/*.db-*
+hermes/.hermes_history
 hermes/logs/
 hermes/sessions/
 hermes/cron/
 
+# Hermes databases
+hermes/*.db
+hermes/*.db-*
+
 # Hermes generated caches
 hermes/*cache*
+
+# ==============================
+# Loona Generated Data
+# ==============================
+hermes/plugins/loona-tools/tools/files/.file_index.json
+
+# ==============================
+# Operating System
+# ==============================
+.DS_Store
+Thumbs.db
+
+# ==============================
+# VS Code
+# ==============================
+.vscode/
+
+# ==============================
+# Hermes Source
+# ==============================
+# Hermes is included as a dependency but its upstream source
+# is not committed to the Loona repository.
+hermes/hermes-agent/

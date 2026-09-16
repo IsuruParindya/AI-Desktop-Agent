@@ -25,6 +25,7 @@ terminal:
   docker_mount_cwd_to_workspace: false
   lifetime_seconds: 300
 browser:
+  backend: browser-use
   inactivity_timeout: 120
   extension_control:
     enabled: false

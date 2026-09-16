@@ -197,3 +197,18 @@ LOONA_OPEN_FILE_BY_QUERY = {
         "required": ["query"],
     },
 }
+
+LOONA_SET_VOLUME = {
+    "name": "loona_set_volume",
+    "description": "Sets the Windows master volume to the requested percentage.",
+    "parameters": {
+        "type": "object",
+        "properties": {
+            "volume": {
+                "type": "number",
+                "description": "Volume percentage from 0 to 100.",
+            },
+        },
+        "required": ["volume"],
+    },
+}
