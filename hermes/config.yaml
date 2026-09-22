@@ -2,17 +2,21 @@ model:
   default: gemini-3.5-flash-lite
   provider: gemini
   base_url: https://generativelanguage.googleapis.com/v1beta
+
 database:
   journal_mode: wal
+
 runtime:
   nofile_soft_limit: 4096
+
 agent:
   max_turns: 8
   service_tier: ''
   fast_auto_seconds: 60
   verbose: false
-  reasoning_effort: medium
+  reasoning_effort: none
   personalities: {}
+
 terminal:
   backend: local
   cwd: .
@@ -24,11 +28,13 @@ terminal:
   container_persistent: true
   docker_mount_cwd_to_workspace: false
   lifetime_seconds: 300
+
 browser:
   backend: browser-use
   inactivity_timeout: 120
   extension_control:
     enabled: false
+
 tool_loop_guardrails:
   warnings_enabled: true
   hard_stop_enabled: false
@@ -41,6 +47,7 @@ tool_loop_guardrails:
     exact_failure: 5
     same_tool_failure: 8
     idempotent_no_progress: 5
+
 compression:
   enabled: true
   checkpoint_required: false
@@ -59,8 +66,10 @@ compression:
   codex_app_server_auto: native
   codex_responses_native: false
   idle_compact_after_seconds: 0
+
 prompt_caching:
   cache_ttl: 5m
+
 display:
   compact: false
   busy_input_mode: interrupt
@@ -75,6 +84,10 @@ display:
   cleanup_progress: false
   long_running_notifications: true
   busy_ack_detail: true
+
+voice:
+  beep_enabled: false
+  thinking_sound: false
 stt:
   enabled: true
   language: en
@@ -83,16 +96,25 @@ stt:
   openai:
     model: whisper-1
     language: ''
+
+tts:
+  provider: edge
+  edge:
+    voice: en-GB-SoniaNeural
+
 memory:
   memory_enabled: true
   user_profile_enabled: true
   memory_char_limit: 2200
   user_char_limit: 1375
   nudge_interval: 10
+
 delegation:
   max_iterations: 250
+
 skills:
   creation_nudge_interval: 15
+
 plugins:
   enabled:
     - loona-tools
@@ -100,11 +122,14 @@ plugins:
   entries:
     loona-tools:
       allow_tool_override: false
+
 kanban:
   review_dispatch: true
+
 code_execution:
   timeout: 300
   max_tool_calls: 50
+
 gateway:
   signal_interrupt_grace_timeout: 1
   delivery_ledger: true
@@ -135,23 +160,30 @@ gateway:
   trust_recent_files_seconds: 600
   api_server:
     max_concurrent_runs: 10
+
 streaming:
   enabled: false
+
 onboarding:
   seen:
     busy_input_prompt: true
     tool_progress_prompt: true
+
 telemetry:
   shared_metrics:
     enabled: false
     send: false
+
 updates:
   check: true
   pre_update_backup: false
   backup_keep: 5
   non_interactive_local_changes: stash
+
 _config_version: 42
+
 group_sessions_per_user: true
+
 platform_toolsets:
   cli:
     - browser
@@ -193,11 +225,13 @@ platform_toolsets:
     - hermes-teams
   google_chat:
     - hermes-google_chat
+
 known_plugin_toolsets:
   cli:
     - a2a
     - loona_tools
     - spotify
+
 known_builtin_toolsets:
   cli:
     - browser
@@ -257,7 +291,7 @@ known_builtin_toolsets:
 #   kimi-coding  (KIMI_API_KEY)        — Kimi / Moonshot
 #   kimi-coding-cn (KIMI_CN_API_KEY)   — Kimi / Moonshot (China)
 #   minimax      (MINIMAX_API_KEY)     — MiniMax
-#   minimax-cn   (MINIMAX_CN_API_KEY)  — MiniMax (China)
+#   minimax-cn   (MINIMAX_CN_API_KEY) — MiniMax (China)
 #   bedrock      (AWS IAM / boto3)     — AWS Bedrock (Converse API)
 #
 # For custom OpenAI-compatible endpoints, add base_url and key_env.
@@ -265,3 +299,4 @@ known_builtin_toolsets:
 # fallback_model:
 #   provider: openrouter
 #   model: anthropic/claude-sonnet-4
+

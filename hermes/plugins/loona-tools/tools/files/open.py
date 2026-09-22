@@ -1,7 +1,33 @@
 import json
 import os
+import time
+import ctypes
 
 from .paths import is_allowed_path
+
+
+def _restore_hermes_window():
+    """
+    Restore focus to the Hermes console after Windows launches the file.
+    This prevents the newly opened application from hiding the final response.
+    """
+    try:
+        user32 = ctypes.windll.user32
+
+        # Give Windows a moment to finish launching the associated application.
+        time.sleep(0.15)
+
+        # Find the console window that owns this Python process.
+        console_window = user32.GetConsoleWindow()
+
+        if console_window:
+            user32.ShowWindow(console_window, 5)  # SW_SHOW
+            user32.SetForegroundWindow(console_window)
+
+    except Exception:
+        # Focus restoration is only a UI convenience.
+        # Never make file opening fail because of it.
+        pass
 
 
 def loona_open_file(args: dict, **kwargs) -> str:
@@ -11,12 +37,9 @@ def loona_open_file(args: dict, **kwargs) -> str:
     Only files on the allowed D: and E: drives can be opened.
     """
 
-    path = str(
-        args.get("path", "")
-    ).strip()
+    path = str(args.get("path", "")).strip()
 
     if not path:
-
         return json.dumps({
             "success": False,
             "error": "No file path was provided.",
@@ -29,7 +52,6 @@ def loona_open_file(args: dict, **kwargs) -> str:
     # ---------------------------------------------------------
 
     if not is_allowed_path(path):
-
         return json.dumps({
             "success": False,
             "error": (
@@ -44,7 +66,6 @@ def loona_open_file(args: dict, **kwargs) -> str:
     # ---------------------------------------------------------
 
     if not os.path.isfile(path):
-
         return json.dumps({
             "success": False,
             "error": "The requested file does not exist.",
@@ -56,8 +77,10 @@ def loona_open_file(args: dict, **kwargs) -> str:
     # ---------------------------------------------------------
 
     try:
-
         os.startfile(path)
+
+        # Restore Hermes so its final response remains visible.
+        _restore_hermes_window()
 
         return json.dumps({
             "success": True,
@@ -67,7 +90,6 @@ def loona_open_file(args: dict, **kwargs) -> str:
         })
 
     except OSError as error:
-
         return json.dumps({
             "success": False,
             "action": "open_failed",
