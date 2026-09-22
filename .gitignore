@@ -70,3 +70,17 @@ Thumbs.db
 # Hermes is included as a dependency but its upstream source
 # is not committed to the Loona repository.
 hermes/hermes-agent/
+# ==============================
+# Hermes Local Generated State
+# ==============================
+hermes/skills/.curator_state
+hermes/skills/.curator_backups/
+hermes/skills/.usage.json
+hermes/skills/.usage.json.lock
+hermes/pastes/
+
+# ==============================
+# Loona Generated Voice Tests
+# ==============================
+voice/*.mp3
+voice/*.wav
