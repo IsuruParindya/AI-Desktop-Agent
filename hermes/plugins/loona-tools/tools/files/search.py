@@ -30,7 +30,7 @@ def _get_candidate_files(query, file_index):
 
     for file_info in file_index:
 
-        filename = file_info["stem_lower"]
+        filename = _normalize_text(file_info["stem_lower"])
 
         if normalized_query in filename:
             direct_matches.append(file_info)
@@ -44,7 +44,7 @@ def _get_candidate_files(query, file_index):
 
     for file_info in file_index:
 
-        filename = file_info["stem_lower"]
+        filename = _normalize_text(file_info["stem_lower"])
 
         if any(
             keyword in filename

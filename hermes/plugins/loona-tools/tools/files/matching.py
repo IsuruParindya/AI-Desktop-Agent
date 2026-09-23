@@ -7,6 +7,45 @@ from .episodes import (
 )
 
 
+_UNWANTED_TITLE_MARKERS = {
+    "trailer",
+    "teaser",
+    "preview",
+    "sample",
+    "clip",
+    "thumbnail",
+    "subtitle",
+    "subtitles",
+    "captions",
+}
+
+_VIDEO_METADATA_TOKENS = {
+    "1080p",
+    "720p",
+    "2160p",
+    "480p",
+    "4k",
+    "x264",
+    "x265",
+    "h264",
+    "hevc",
+    "hdrip",
+    "bdrip",
+    "webdl",
+    "webrip",
+    "remux",
+    "bluray",
+}
+
+_SUBTITLE_EXTENSIONS = {
+    ".srt",
+    ".sub",
+    ".ass",
+    ".ssa",
+    ".vtt",
+}
+
+
 def _normalize_text(text):
     """
     Normalize text for comparison.
@@ -43,6 +82,36 @@ def _get_keywords(text):
     ]
 
 
+def _count_extra_keywords(query_keywords, filename_keywords):
+    """Return how many filename keywords are not part of the request."""
+
+    query_set = set(query_keywords)
+    filename_set = set(filename_keywords)
+
+    return len(filename_set - query_set)
+
+
+def _count_unwanted_markers(filename_text):
+    """Count filename markers that usually indicate a non-primary file."""
+
+    normalized = _normalize_text(filename_text)
+
+    if not normalized:
+        return 0
+
+    count = 0
+
+    for marker in _UNWANTED_TITLE_MARKERS:
+        if marker in normalized:
+            count += 1
+
+    for marker in _VIDEO_METADATA_TOKENS:
+        if marker in normalized:
+            count += 1
+
+    return count
+
+
 def score_title(query, filename_stem):
     """
     Calculate how closely a filename matches the search query.
@@ -69,15 +138,29 @@ def score_title(query, filename_stem):
     if query_normalized == filename_normalized:
         return 1000
 
+    query_keywords = _get_keywords(query)
+    filename_keywords = _get_keywords(filename_stem)
+
     # ---------------------------------------------------------
     # Full query contained in filename
     # ---------------------------------------------------------
 
     if query_normalized in filename_normalized:
-        return 900
+        extra_keywords = _count_extra_keywords(
+            query_keywords,
+            filename_keywords,
+        )
+        unwanted_count = _count_unwanted_markers(filename_stem)
 
-    query_keywords = _get_keywords(query)
-    filename_keywords = _get_keywords(filename_stem)
+        score = 900
+
+        if extra_keywords > 0:
+            score -= min(80, extra_keywords * 25)
+
+        if unwanted_count > 0:
+            score -= min(250, unwanted_count * 65)
+
+        return max(score, 350)
 
     if not query_keywords or not filename_keywords:
         return 0
@@ -132,6 +215,11 @@ def score_title(query, filename_stem):
             fuzzy_count += 1
 
     total_keywords = len(query_keywords)
+    extra_keywords = _count_extra_keywords(
+        query_keywords,
+        filename_keywords,
+    )
+    unwanted_count = _count_unwanted_markers(filename_stem)
 
     # ---------------------------------------------------------
     # Strong keyword matches
@@ -139,24 +227,47 @@ def score_title(query, filename_stem):
 
     if matched_count == total_keywords:
 
-        if fuzzy_count > 0:
-            return 780
+        base_score = 780 if fuzzy_count > 0 else 850
 
-        return 850
+        if extra_keywords > 0:
+            base_score -= min(60, extra_keywords * 15)
+
+        if unwanted_count > 0:
+            base_score -= min(220, unwanted_count * 55)
+
+        return max(base_score, 250)
 
     # ---------------------------------------------------------
     # Multiple keyword matches
     # ---------------------------------------------------------
 
     if matched_count >= 2:
-        return 650
+
+        base_score = 650
+
+        if extra_keywords > 0:
+            base_score -= min(50, extra_keywords * 15)
+
+        if unwanted_count > 0:
+            base_score -= min(180, unwanted_count * 45)
+
+        return max(base_score, 250)
 
     # ---------------------------------------------------------
     # Single keyword match
     # ---------------------------------------------------------
 
     if matched_count == 1:
-        return 500
+
+        base_score = 500
+
+        if extra_keywords > 0:
+            base_score -= min(40, extra_keywords * 10)
+
+        if unwanted_count > 0:
+            base_score -= min(120, unwanted_count * 30)
+
+        return max(base_score, 150)
 
     # ---------------------------------------------------------
     # Overall fuzzy matching
@@ -180,6 +291,7 @@ def score_file(query, file_info):
     """
 
     filename_stem = file_info["stem_lower"]
+    filename_extension = file_info.get("extension", "")
 
     query_season, query_episode = extract_episode_info(
         query
@@ -242,6 +354,16 @@ def score_file(query, file_info):
         score += 200
 
     # ---------------------------------------------------------
+    # Unwanted file types and markers
+    # ---------------------------------------------------------
+
+    if filename_extension in _SUBTITLE_EXTENSIONS:
+        score -= 300
+
+    if _count_unwanted_markers(filename_stem) > 0:
+        score -= min(220, _count_unwanted_markers(filename_stem) * 55)
+
+    # ---------------------------------------------------------
     # Preferred file format bonus
     # ---------------------------------------------------------
 
@@ -268,8 +390,7 @@ def score_file(query, file_info):
         ".gif",
     }
 
-    if file_info["extension"] in preferred_extensions:
-
+    if filename_extension in preferred_extensions:
         score += 25
 
     return score
